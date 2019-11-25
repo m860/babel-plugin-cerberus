@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/m860/babel-plugin-cerberus.git"
+    "url": "git+https://github.com/m860/cerberus-babel-plugin-transform.git"
   },
   "author": "m860",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/m860/babel-plugin-cerberus/issues"
+    "url": "https://github.com/m860/cerberus-babel-plugin-transform/issues"
   },
-  "homepage": "https://github.com/m860/babel-plugin-cerberus#readme",
+  "homepage": "https://github.com/m860/cerberus-babel-plugin-transform#readme",
   "devDependencies": {
     "@babel/core": "^7.7.2",
     "@babel/plugin-proposal-class-properties": "^7.7.0",
