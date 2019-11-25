@@ -7,42 +7,56 @@ const ReactModuleName = "$React$";
 const ReactNativeModuleName = "$ReactNative$";
 const ModulesModuleName = "$Modules$";
 
-function getBuiltinModule(name) {
+function getBuiltinModule(node, spec, types) {
+    const name = node.source.value;
     switch (name) {
         case "react":
-            return ReactModuleName;
+            if (spec.type === "ImportSpecifier") {
+                return types.memberExpression(types.identifier(ReactModuleName), types.identifier(spec.imported.name));
+            }
+            return types.identifier(ReactModuleName);
         case "react-native":
-            return ReactNativeModuleName;
+            if (spec.type === "ImportSpecifier") {
+                return types.memberExpression(types.identifier(ReactNativeModuleName), types.identifier(spec.imported.name));
+            }
+            return types.identifier(ReactNativeModuleName);
         default:
-            return ModulesModuleName;
+            if (spec.type === "ImportSpecifier") {
+                return types.memberExpression(
+                    types.memberExpression(
+                        types.identifier(ModulesModuleName),
+                        types.stringLiteral(name),
+                        true
+                    ),
+                    types.identifier(spec.imported.name)
+                );
+            }
+            return types.memberExpression(types.identifier(ModulesModuleName), types.stringLiteral(name), true);
     }
 }
 
-module.exports = function (babel) {
-    const {types} = babel;
+module.exports = function(babel) {
+    const { types } = babel;
 
     return {
         name: "cerberus-transform", // not required
         visitor: {
-            ImportDeclaration(path, {opts}) {
+            ImportDeclaration(path, { opts }) {
                 const excludeModules = opts && opts.modules && opts.modules.length > 0 ? DefaultModules.concat(opts.modules) : DefaultModules;
                 let codes = [];
-                const {node} = path;
-                const {specifiers} = node;
+                const { node } = path;
+                const { specifiers } = node;
                 const name = node.source.value;
                 const existsInExclude = excludeModules.indexOf(name) >= 0;
                 if (existsInExclude) {
                     if (specifiers) {
-                        specifiers.forEach(function (spec) {
+                        specifiers.forEach(function(spec) {
                             switch (spec.type) {
                                 case "ImportNamespaceSpecifier":
                                 case "ImportDefaultSpecifier":
                                     codes.push(
                                         types.variableDeclaration("const", [
-                                            types.variableDeclarator(
-                                                types.identifier(spec.local.name),
-                                                types.identifier(getBuiltinModule(name))
-                                            )
+                                            types.variableDeclarator(types.identifier(spec.local.name), getBuiltinModule(node, spec, types))
                                         ])
                                     );
 
@@ -50,13 +64,7 @@ module.exports = function (babel) {
                                 case "ImportSpecifier":
                                     codes.push(
                                         types.variableDeclaration("const", [
-                                            types.variableDeclarator(
-                                                types.identifier(spec.local.name),
-                                                types.memberExpression(
-                                                    types.identifier(getBuiltinModule(name)),
-                                                    types.identifier(spec.imported.name)
-                                                )
-                                            )
+                                            types.variableDeclarator(types.identifier(spec.local.name), getBuiltinModule(node, spec, types))
                                         ])
                                     );
                                     break;
@@ -70,4 +78,4 @@ module.exports = function (babel) {
             }
         }
     };
-}
+};

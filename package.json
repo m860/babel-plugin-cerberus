@@ -1,5 +1,5 @@
 {
-  "name": "babel-plugin-cerberus",
+  "name": "@cerberus/transform",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -29,6 +29,7 @@
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.0.2",
     "dateformat": "^3.0.3",
+    "object-path": "^0.11.4",
     "react": "^16.12.0",
     "react-native": "^0.61.4",
     "webpack": "^4.41.2",

@@ -28,7 +28,8 @@ module.exports = {
                                 "./index.js",
                                 {
                                     modules: [
-                                        "dateformat"
+                                        "dateformat",
+                                        "object-path"
                                     ]
                                 }
                             ]

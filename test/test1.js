@@ -3,8 +3,12 @@
  */
 import * as React from "react"
 import {Text} from "react-native"
-// import df from "dateformat"
+import df from "dateformat"
+import {get as getPath} from "object-path"
 
 export default function () {
-    return <Text>abc</Text>
+    const people = {
+        name: "Hello"
+    };
+    return <Text>{getPath(people, "name")}:{df(new Date(), "yyyy-mm-dd")}</Text>
 }
