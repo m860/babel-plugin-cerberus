@@ -3,9 +3,9 @@
  */
 
 const DefaultModules = ["react", "react-native"];
-const ReactModuleName = "$React$";
-const ReactNativeModuleName = "$ReactNative$";
-const ModulesModuleName = "$Modules$";
+const ReactModuleName = "$REACT$";
+const ReactNativeModuleName = "$REACTNATIVE$";
+const ModulesModuleName = "$MODULES$";
 
 function getBuiltinModule(node, spec, types) {
     const name = node.source.value;
