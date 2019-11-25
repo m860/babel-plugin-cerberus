@@ -35,22 +35,22 @@ function getBuiltinModule(node, spec, types) {
     }
 }
 
-module.exports = function(babel) {
-    const { types } = babel;
+module.exports = function (babel) {
+    const {types} = babel;
 
     return {
-        name: "cerberus-transform", // not required
+        name: "babel-plugin-transform", // not required
         visitor: {
-            ImportDeclaration(path, { opts }) {
+            ImportDeclaration(path, {opts}) {
                 const excludeModules = opts && opts.modules && opts.modules.length > 0 ? DefaultModules.concat(opts.modules) : DefaultModules;
                 let codes = [];
-                const { node } = path;
-                const { specifiers } = node;
+                const {node} = path;
+                const {specifiers} = node;
                 const name = node.source.value;
                 const existsInExclude = excludeModules.indexOf(name) >= 0;
                 if (existsInExclude) {
                     if (specifiers) {
-                        specifiers.forEach(function(spec) {
+                        specifiers.forEach(function (spec) {
                             switch (spec.type) {
                                 case "ImportNamespaceSpecifier":
                                 case "ImportDefaultSpecifier":
