@@ -40,14 +40,14 @@ import df from "dateformat"
 import {get as getPath} from "object-path"
 
 // output
-const React = $React$;
-const React2 = $React$;
-const memo = $React$.memo;
-const useState = $React$.useState;
-const ur = $React$.useRef;
-const Text = $ReactNative$.Text;
-const df = $Modules$["dateformat"];
-const getPath = $Modules$["object-path"].get;
+const React = $REACT$;
+const React2 = $REACT$;
+const memo = $REACT$.memo;
+const useState = $REACT$.useState;
+const ur = $REACT$.useRef;
+const Text = $REACTNATIVE$.Text;
+const df = $MODULES$["dateformat"];
+const getPath = $MODULES$["object-path"].get;
 ```
 
 <!--
