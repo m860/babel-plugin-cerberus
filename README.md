@@ -67,4 +67,16 @@ const getPath = $MODULES$["object-path"].get;
     // output
     <Image source={{uri:`${$MODULES$.BASE_URL}/${require("logo.png")}`}}/>
     ```
+- [ ] `modules`支持别名设置
+    ```
+    // 例如
+    {
+        modules:[
+            {
+                name:"dateformat",
+                exportName:"df"
+            }
+        ]
+    }
+    ```
 -->
