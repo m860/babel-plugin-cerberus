@@ -1,12 +1,12 @@
 {
-  "name": "@cbs/babel-plugin-transform",
+  "name": "@m860/cerberus-babel-plugin-transform",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "webpack --config ./test/webpack.config.js",
     "cm": "git-cz",
-    "publish":"semantic-release"
+    "publish": "semantic-release"
   },
   "repository": {
     "type": "git",
@@ -43,7 +43,7 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "publishConfig":{
-    "access":"public"
+  "publishConfig": {
+    "access": "public"
   }
 }
