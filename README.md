@@ -8,6 +8,10 @@
 
 [babel-types API](https://babeljs.io/docs/en/babel-types)
 
+## Install
+
+`npm i -D @m860/cerberus-babel-plugin-transform`
+
 ## Usage
 
 > NOTE:默认情况下`react`,`react-native`会被替换
