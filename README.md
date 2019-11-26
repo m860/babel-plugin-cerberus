@@ -1,12 +1,6 @@
-# cerberus-transform
+# cerberus-babel-plugin-transform
 
-(babel-plugin)cerberus转换工具
-
-[ASTExplorer](https://astexplorer.net/)在线调试工具
-
-[Babel插件开发手册](https://github.com/jamiebuilds/babel-handbook/blob/master/translations/zh-Hans/plugin-handbook.md)
-
-[babel-types API](https://babeljs.io/docs/en/babel-types)
+cerberus转换工具
 
 ## Install
 
@@ -56,6 +50,14 @@ const df = $Modules$["dateformat"];
 const getPath = $Modules$["object-path"].get;
 ```
 
+<!--
+
+[ASTExplorer](https://astexplorer.net/)在线调试工具
+
+[Babel插件开发手册](https://github.com/jamiebuilds/babel-handbook/blob/master/translations/zh-Hans/plugin-handbook.md)
+
+[babel-types API](https://babeljs.io/docs/en/babel-types)
+
 ## TODO
 
 - [ ] 处理`require("*.png")`,如果是资源文件需要进行重定向到`http`
@@ -65,3 +67,4 @@ const getPath = $Modules$["object-path"].get;
     // output
     <Image source={{uri:`${$MODULES$.BASE_URL}/${require("logo.png")}`}}/>
     ```
+-->
