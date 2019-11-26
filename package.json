@@ -1,5 +1,5 @@
 {
-  "name": "@cerberus/babel-plugin-transform",
+  "name": "@cbs/babel-plugin-transform",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
