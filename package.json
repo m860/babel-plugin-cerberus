@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "webpack --config ./test/webpack.config.js",
-    "cm": "git-cz"
+    "cm": "git-cz",
+    "publish":"semantic-release"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "object-path": "^0.11.4",
     "react": "^16.12.0",
     "react-native": "^0.61.4",
+    "semantic-release": "^15.13.31",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
@@ -40,5 +42,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "publishConfig":{
+    "access":"public"
   }
 }

@@ -51,3 +51,13 @@ const Text = $ReactNative$.Text;
 const df = $Modules$["dateformat"];
 const getPath = $Modules$["object-path"].get;
 ```
+
+## TODO
+
+- [ ] 处理`require("*.png")`,如果是资源文件需要进行重定向到`http`
+    ```js 
+    // input
+    <Image source={require("logo.png")}/>
+    // output
+    <Image source={{uri:`${$MODULES$.BASE_URL}/${require("logo.png")}`}}/>
+    ```
