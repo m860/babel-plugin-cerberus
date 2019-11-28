@@ -27,6 +27,21 @@ cerberus转换工具
 > NOTE: `modules`中设置的module名字和npm保持一致，在`Cerberus`库中导出的名字也必须一致。
 
 
+## Option
+
+```flow js
+type Option={
+    /**
+     * 不需要被打包的公共模块
+     */
+    modules?:Array<string>,
+    /**
+     * 需要处理的资源文件的正则表达式，默认：/\.(gif|png|jpeg|jpg|svg)$/i 
+     */
+    resourceTest?:?RegExp
+};
+```
+
 ## Examples
 
 ```

@@ -36,20 +36,17 @@ module.exports = {
                         ]
                     }
                 }],
+            }, {
+                test: /\.(png|jpg|gif|jpeg)$/,
+                use: {
+                    loader: "file-loader",
+                },
+                exclude: /node_modules/,
             }
         ],
     },
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "[name].js",
-        // libraryTarget: "commonjs"
-        // libraryTarget: "assign",
-        // library:"return"
-
-    },
-    devServer: {
-        contentBase: path.join(__dirname, 'test'),
-        compress: true,
-        port: 3000
     }
 };
