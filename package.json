@@ -6,7 +6,7 @@
   "scripts": {
     "test": "webpack --config ./test/webpack.config.js",
     "cm": "git-cz",
-    "publish": "semantic-release"
+    "publish": "semantic-release && git checkout package.json"
   },
   "repository": {
     "type": "git",
