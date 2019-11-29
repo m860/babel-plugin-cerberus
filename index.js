@@ -6,7 +6,7 @@
  */
 
 const DefaultModules = ["react", "react-native"];
-const DefaultResourceTest=/\.(gif|png|jpeg|jpg|svg)$/i;
+const DefaultResourceTest = /\.(gif|png|jpeg|jpg|svg)$/i;
 const ReactModuleName = "$REACT$";
 const ReactNativeModuleName = "$REACTNATIVE$";
 const ModulesModuleName = "$MODULES$";
@@ -35,37 +35,36 @@ function getBuiltinModule(node, spec, types) {
     }
 }
 
+function toUriSource(types, sourceName) {
+    return types.objectExpression([
+        types.objectProperty(
+            types.identifier("uri"),
+            types.binaryExpression(
+                "+",
+                types.memberExpression(types.identifier(ModulesModuleName), types.stringLiteral("__BASE_URL__"), true),
+                types.callExpression(types.identifier("require"), [types.stringLiteral(sourceName)])
+            )
+        )
+    ]);
+}
+
 module.exports = function(babel) {
     const { types } = babel;
-
     return {
-        name: "babel-plugin-transform", // not required
+        name: "cerberus-transform", // not required
         visitor: {
             CallExpression(path, { opts }) {
-                let codes=[];
+                let codes = [];
                 const { node } = path;
                 const calleeName = node.callee.name;
                 if (calleeName === "require") {
                     if (node.arguments.length === 1) {
                         const arg = node.arguments[0];
                         if (arg.type === "StringLiteral") {
-                            const {value}=arg;
-                            const test=opts.resourceTest||DefaultResourceTest;
-                            if(test.test(value)){
-                                codes.push(
-                                    types.binaryExpression(
-                                        "+",
-                                        types.memberExpression(
-                                            types.identifier(ModulesModuleName),
-                                            types.stringLiteral("__BASE_URL__"),
-                                            true
-                                        ),
-                                        types.callExpression(
-                                            types.identifier("require"),
-                                            [types.stringLiteral(value)]
-                                        )
-                                    )
-                                )
+                            const { value } = arg;
+                            const test = opts.resourceTest || DefaultResourceTest;
+                            if (test.test(value)) {
+                                codes.push(toUriSource(types, value));
                             }
                         }
                     }
@@ -73,7 +72,7 @@ module.exports = function(babel) {
                 if (codes.length > 0) {
                     path.replaceWithMultiple(codes);
                 }
-                path.skip()
+                path.skip();
             },
             ImportDeclaration(path, { opts }) {
                 const excludeModules = opts && opts.modules && opts.modules.length > 0 ? DefaultModules.concat(opts.modules) : DefaultModules;
@@ -104,30 +103,24 @@ module.exports = function(babel) {
                             }
                         });
                     }
-                }
-                else{
-                    const test=opts.resourceTest||DefaultResourceTest;
-                    if(test.test(name)){
-                        if(specifiers){
-                            specifiers.forEach(function(spec){
-                                switch(spec.type){
+                } else {
+                    const test = opts.resourceTest || DefaultResourceTest;
+                    if (test.test(name)) {
+                        if (specifiers) {
+                            specifiers.forEach(function(spec) {
+                                switch (spec.type) {
                                     case "ImportDefaultSpecifier":
                                         codes.push(
-                                            types.variableDeclaration("const",[
+                                            types.variableDeclaration("const", [
                                                 types.variableDeclarator(
                                                     types.identifier(spec.local.name),
-                                                    types.callExpression(
-                                                        types.identifier("require"),
-                                                        [
-                                                            types.stringLiteral(name)
-                                                        ]
-                                                    )
+                                                    types.callExpression(types.identifier("require"), [types.stringLiteral(name)])
                                                 )
                                             ])
-                                        )
+                                        );
                                         break;
                                 }
-                            })
+                            });
                         }
                     }
                 }
@@ -138,3 +131,4 @@ module.exports = function(babel) {
         }
     };
 };
+
