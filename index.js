@@ -4,7 +4,6 @@
  * test https://astexplorer.net/#/gist/9e3145f7e516ebacb9b926e530a5666a/9b212ef9d2e7a259481f7d755bfb9900a52a016e
  *
  */
-
 const DefaultModules = ["react", "react-native"];
 const DefaultResourceTest = /\.(gif|png|jpeg|jpg|svg)$/i;
 const ReactModuleName = "$REACT$";
@@ -36,16 +35,21 @@ function getBuiltinModule(node, spec, types) {
 }
 
 function toUriSource(types, sourceName) {
-    return types.objectExpression([
-        types.objectProperty(
-            types.identifier("uri"),
-            types.binaryExpression(
-                "+",
-                types.memberExpression(types.identifier(ModulesModuleName), types.stringLiteral("__BASE_URL__"), true),
-                types.callExpression(types.identifier("require"), [types.stringLiteral(sourceName)])
+    return types.callExpression(
+        types.memberExpression(
+            types.identifier(ModulesModuleName),
+            types.identifier("resolveAsset"),
+            false
+        ),
+        [
+            types.callExpression(
+                types.identifier("require"),
+                [
+                    types.stringLiteral(sourceName)
+                ]
             )
-        )
-    ]);
+        ]
+    )
 }
 
 module.exports = function(babel) {
@@ -56,6 +60,14 @@ module.exports = function(babel) {
             CallExpression(path, { opts }) {
                 let codes = [];
                 const { node } = path;
+                if(node.callee.type==="MemberExpression"){
+                    if(node.callee.object.type==="Identifier"
+                        && node.callee.object.name===ModulesModuleName
+                        && node.callee.property.type==="Identifier"
+                        && node.callee.property.name==="resolveAsset"){
+                        path.skip()
+                    }
+                }
                 const calleeName = node.callee.name;
                 if (calleeName === "require") {
                     if (node.arguments.length === 1) {
@@ -72,7 +84,6 @@ module.exports = function(babel) {
                 if (codes.length > 0) {
                     path.replaceWithMultiple(codes);
                 }
-                path.skip();
             },
             ImportDeclaration(path, { opts }) {
                 const excludeModules = opts && opts.modules && opts.modules.length > 0 ? DefaultModules.concat(opts.modules) : DefaultModules;
