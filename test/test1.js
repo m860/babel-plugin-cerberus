@@ -1,3 +1,6 @@
+/**
+ * @flow
+ */
 import * as React from "react"
 import {Text, View, Image,Animated} from "react-native"
 import df from "dateformat"
@@ -26,3 +29,7 @@ export default function () {
         </View>
     )
 }
+
+const demo2=React.memo<*>(function(){
+    return <Text>demo2</Text>
+})

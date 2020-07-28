@@ -6,8 +6,11 @@
   "scripts": {
     "test": "webpack --config ./test/webpack.config.js",
     "cm": "git-cz",
-    "publish": "semantic-release && git checkout package.json"
+    "pub": "semantic-release && git checkout package.json"
   },
+  "files": [
+    "index.js"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/m860/cerberus-babel-plugin-transform.git"
