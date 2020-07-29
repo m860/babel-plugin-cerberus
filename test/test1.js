@@ -11,7 +11,7 @@ import type {TestType} from "./types"
 const imageSource2 = require("./logo.png");
 
 // skip
-const a = $MODULES$.resolveAsset(require("./logo.png"))
+// const a = $MODULES$.resolveAsset(require("./logo.png"))
 
 export default function () {
     const people = {

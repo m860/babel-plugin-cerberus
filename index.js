@@ -3,14 +3,16 @@
  *
  * test https://astexplorer.net/#/gist/9e3145f7e516ebacb9b926e530a5666a/9b212ef9d2e7a259481f7d755bfb9900a52a016e
  *
- * @todo 处理图片的2x，3x
  */
+const fs = require("fs");
+const path = require("path");
+
 const DefaultModules = ["react", "react-native"];
 const DefaultResourceTest = /\.(gif|png|jpeg|jpg|svg)$/i;
 const ReactModuleName = "$REACT$";
 const ReactNativeModuleName = "$REACTNATIVE$";
 const ModulesModuleName = "$MODULES$";
-const ResolveAsset="resolveAsset"
+const ResolveAsset = "resolveAsset"
 
 function getBuiltinModule(node, spec, types) {
     const name = node.source.value;
@@ -36,7 +38,29 @@ function getBuiltinModule(node, spec, types) {
     }
 }
 
-function toUriSource(types, sourceName) {
+function isImageSource(sourceName){
+    return /\.(jpg|jpeg|png|gif)$/.test(sourceName);
+}
+
+function getRealImageSource(sourceName,opts){
+    const ext=path.extname(sourceName);
+    const x3SourceName=sourceName.replace(ext,"@3x"+ext);
+    if(fs.existsSync(path.resolve(opts.cwd,x3SourceName))){
+        return x3SourceName;
+    }
+    const x2SourceName=sourceName.replace(ext,"@2x"+ext);
+    if(fs.existsSync(path.resolve(opts.cwd,x2SourceName))){
+        return x2SourceName;
+    }
+    return sourceName
+}
+
+function toUriSource(types, sourceName, opts) {
+    let targetSourceName=sourceName;
+    if(isImageSource(sourceName)){
+        targetSourceName=getRealImageSource(sourceName,opts);
+    }
+
     return types.callExpression(
         types.memberExpression(
             types.identifier(ModulesModuleName),
@@ -47,26 +71,26 @@ function toUriSource(types, sourceName) {
             types.callExpression(
                 types.identifier("require"),
                 [
-                    types.stringLiteral(sourceName)
+                    types.stringLiteral(targetSourceName)
                 ]
             )
         ]
     )
 }
 
-module.exports = function(babel) {
-    const { types } = babel;
+module.exports = function (babel) {
+    const {types} = babel;
     return {
         name: "cerberus-transform", // not required
         visitor: {
-            CallExpression(path, { opts }) {
+            CallExpression(path, {opts}) {
                 let codes = [];
-                const { node } = path;
-                if(node.callee.type==="MemberExpression"){
-                    if(node.callee.object.type==="Identifier"
-                        && node.callee.object.name===ModulesModuleName
-                        && node.callee.property.type==="Identifier"
-                        && node.callee.property.name===ResolveAsset){
+                const {node} = path;
+                if (node.callee.type === "MemberExpression") {
+                    if (node.callee.object.type === "Identifier"
+                        && node.callee.object.name === ModulesModuleName
+                        && node.callee.property.type === "Identifier"
+                        && node.callee.property.name === ResolveAsset) {
                         path.skip()
                     }
                 }
@@ -75,10 +99,10 @@ module.exports = function(babel) {
                     if (node.arguments.length === 1) {
                         const arg = node.arguments[0];
                         if (arg.type === "StringLiteral") {
-                            const { value } = arg;
+                            const {value} = arg;
                             const test = opts.resourceTest || DefaultResourceTest;
                             if (test.test(value)) {
-                                codes.push(toUriSource(types, value));
+                                codes.push(toUriSource(types, value, opts));
                             }
                         }
                     }
@@ -87,16 +111,16 @@ module.exports = function(babel) {
                     path.replaceWithMultiple(codes);
                 }
             },
-            ImportDeclaration(path, { opts }) {
+            ImportDeclaration(path, {opts}) {
                 const excludeModules = opts && opts.modules && opts.modules.length > 0 ? DefaultModules.concat(opts.modules) : DefaultModules;
                 let codes = [];
-                const { node } = path;
-                const { specifiers } = node;
+                const {node} = path;
+                const {specifiers} = node;
                 const name = node.source.value;
                 const existsInExclude = excludeModules.indexOf(name) >= 0;
                 if (existsInExclude) {
                     if (specifiers) {
-                        specifiers.forEach(function(spec) {
+                        specifiers.forEach(function (spec) {
                             switch (spec.type) {
                                 case "ImportNamespaceSpecifier":
                                 case "ImportDefaultSpecifier":
@@ -120,7 +144,7 @@ module.exports = function(babel) {
                     const test = opts.resourceTest || DefaultResourceTest;
                     if (test.test(name)) {
                         if (specifiers) {
-                            specifiers.forEach(function(spec) {
+                            specifiers.forEach(function (spec) {
                                 switch (spec.type) {
                                     case "ImportDefaultSpecifier":
                                         codes.push(

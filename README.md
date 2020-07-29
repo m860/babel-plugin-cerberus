@@ -38,7 +38,9 @@ type Option={
     /**
      * 需要处理的资源文件的正则表达式，默认：/\.(gif|png|jpeg|jpg|svg)$/i 
      */
-    resourceTest?:?RegExp
+    resourceTest?:?RegExp,
+    // 执行的根路径
+    cwd?:string
 };
 ```
 
