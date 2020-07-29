@@ -6,6 +6,7 @@ import {Text, View, Image, Animated} from "react-native"
 import df from "dateformat"
 import {get as getPath} from "object-path"
 import imageSource1 from "./logo.png"
+import type {TestType} from "./types"
 
 const imageSource2 = require("./logo.png");
 
@@ -40,4 +41,11 @@ const demo3 = function () {
             <Text>demo3</Text>
         </>
     );
+}
+
+export type NavigationBarStyle = {
+    title:Object,
+    leftButton:Object,
+    rightButton:Object,
+    container:Object
 }

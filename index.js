@@ -3,6 +3,7 @@
  *
  * test https://astexplorer.net/#/gist/9e3145f7e516ebacb9b926e530a5666a/9b212ef9d2e7a259481f7d755bfb9900a52a016e
  *
+ * @todo 处理图片的2x，3x
  */
 const DefaultModules = ["react", "react-native"];
 const DefaultResourceTest = /\.(gif|png|jpeg|jpg|svg)$/i;
