@@ -9,6 +9,7 @@ const DefaultResourceTest = /\.(gif|png|jpeg|jpg|svg)$/i;
 const ReactModuleName = "$REACT$";
 const ReactNativeModuleName = "$REACTNATIVE$";
 const ModulesModuleName = "$MODULES$";
+const ResolveAsset="resolveAsset"
 
 function getBuiltinModule(node, spec, types) {
     const name = node.source.value;
@@ -38,7 +39,7 @@ function toUriSource(types, sourceName) {
     return types.callExpression(
         types.memberExpression(
             types.identifier(ModulesModuleName),
-            types.identifier("resolveAsset"),
+            types.identifier(ResolveAsset),
             false
         ),
         [
@@ -64,7 +65,7 @@ module.exports = function(babel) {
                     if(node.callee.object.type==="Identifier"
                         && node.callee.object.name===ModulesModuleName
                         && node.callee.property.type==="Identifier"
-                        && node.callee.property.name==="resolveAsset"){
+                        && node.callee.property.name===ResolveAsset){
                         path.skip()
                     }
                 }
