@@ -42,23 +42,24 @@ function isImageSource(sourceName){
     return /\.(jpg|jpeg|png|gif)$/.test(sourceName);
 }
 
-function getRealImageSource(sourceName,opts){
+function getRealImageSource(sourceName,filename){
+    const root=path.dirname(filename);
     const ext=path.extname(sourceName);
     const x3SourceName=sourceName.replace(ext,"@3x"+ext);
-    if(fs.existsSync(path.resolve(opts.cwd,x3SourceName))){
+    if(fs.existsSync(path.resolve(root,x3SourceName))){
         return x3SourceName;
     }
     const x2SourceName=sourceName.replace(ext,"@2x"+ext);
-    if(fs.existsSync(path.resolve(opts.cwd,x2SourceName))){
+    if(fs.existsSync(path.resolve(root,x2SourceName))){
         return x2SourceName;
     }
     return sourceName
 }
 
-function toUriSource(types, sourceName, opts) {
+function toUriSource(types, sourceName, filename) {
     let targetSourceName=sourceName;
     if(isImageSource(sourceName)){
-        targetSourceName=getRealImageSource(sourceName,opts);
+        targetSourceName=getRealImageSource(sourceName,filename);
     }
 
     return types.callExpression(
@@ -83,7 +84,7 @@ module.exports = function (babel) {
     return {
         name: "cerberus-transform", // not required
         visitor: {
-            CallExpression(path, {opts}) {
+            CallExpression(path, {opts,filename}) {
                 let codes = [];
                 const {node} = path;
                 if (node.callee.type === "MemberExpression") {
@@ -102,7 +103,7 @@ module.exports = function (babel) {
                             const {value} = arg;
                             const test = opts.resourceTest || DefaultResourceTest;
                             if (test.test(value)) {
-                                codes.push(toUriSource(types, value, opts));
+                                codes.push(toUriSource(types, value, filename));
                             }
                         }
                     }
